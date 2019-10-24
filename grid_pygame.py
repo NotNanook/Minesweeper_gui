@@ -4,10 +4,12 @@ import sys
 rd.seed()
 pygame.init()
 
+LEFT = 1
+RIGHT = 3
 leben = 1
 
 # Change size of the field
-fgröse = 20
+fgröse = 15
 
 cl = []
 
@@ -17,6 +19,7 @@ bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(roun
 weis = (255, 255, 255)
 rot = (255, 0, 0)
 grau = (192, 192, 192)
+orange = (255,165,0)
 
 x = 1
 y = 1
@@ -70,28 +73,37 @@ while not game_over:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
             pos = pygame.mouse.get_pos()
             print(pos)
-            my, mx = pos
+            mx, my = pos
             mx = int(mx / gröse)
             my = int(my / gröse)
             print(my, mx)
 
             try:
                 if field[mx][my] != "+":
-                    pygame.draw.rect(screen, grau, (my*50+(my*1)+1, mx*50+(mx*1)+1, gröse, gröse))
+                    pygame.draw.rect(screen, grau, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
                     myfont = pygame.font.SysFont('Comic Sans MS', 20)
                     textsurface = myfont.render(field[mx][my], False, (0, 0, 0))
-                    screen.blit(textsurface,(my*50+(my*1)+21, mx*50+(mx*1)+15))
+                    screen.blit(textsurface,(mx*50+(mx*1)+21, my*50+(my*1)+15))
                 else:
-                    pygame.draw.rect(screen, rot, (my*50+(my*1)+1, mx*50+(mx*1)+1, gröse, gröse))
+                    pygame.draw.rect(screen, rot, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
                     if leben != 0:
                         leben -= 1
                     elif leben == 0:
                         game_over = True
             except IndexError:
                 pass
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
+            pos = pygame.mouse.get_pos()
+            mx, my = pos
+            mx = int(mx / gröse)
+            my = int(my / gröse)
+            if pygame.Surface.get_at(screen, pos) == weis:
+                pygame.draw.rect(screen, orange, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
+            else:
+                pygame.draw.rect(screen, weis, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
 
 
 
