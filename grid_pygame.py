@@ -16,10 +16,14 @@ cl = []
 field = [["O" for i in range(fgröse)] for i in range(fgröse)]
 bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(round((20*(fgröse**2))//100))]
 
+rn = int(fgröse**2-len(bomben))
+richtig = 0
+
 weis = (255, 255, 255)
 rot = (255, 0, 0)
 grau = (192, 192, 192)
 orange = (255,165,0)
+schwarz = (0,0,0)
 
 x = 1
 y = 1
@@ -68,7 +72,7 @@ game_over = False
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Minesweeper")
 
-while not game_over:
+while not game_over and richtig != rn:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -83,17 +87,21 @@ while not game_over:
             print(mx, my)
 
             try:
-                if field[mx][my] != "+":
+                if field[mx][my] != "+" and pygame.Surface.get_at(screen, pos) != grau:
                     pygame.draw.rect(screen, grau, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
                     myfont = pygame.font.SysFont('Comic Sans MS', 20)
                     textsurface = myfont.render(field[mx][my], False, (0, 0, 0))
                     screen.blit(textsurface,(mx*50+(mx*1)+21, my*50+(my*1)+15))
-                else:
+                    richtig += 1
+                    print("Richtig:", richtig)
+                elif field[mx][my] == "+":
                     pygame.draw.rect(screen, rot, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
                     if leben != 0:
                         leben -= 1
                     elif leben == 0:
                         game_over = True
+                    else:
+                        pass
             except IndexError:
                 pass
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
