@@ -9,7 +9,7 @@ RIGHT = 3
 leben = 1
 
 # Change size of the field
-fgröse = 15
+fgröse = 18
 
 cl = []
 
@@ -19,11 +19,13 @@ bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(roun
 rn = int(fgröse**2-len(bomben))
 richtig = 0
 
+color = 1
 weis = (255, 255, 255)
 rot = (255, 0, 0)
-grau = (192, 192, 192)
+grau = (238,232,170)
 orange = (255,165,0)
 schwarz = (0,0,0)
+colors = [(50,205,50), (152,251,152)]
 
 x = 1
 y = 1
@@ -82,20 +84,20 @@ while not game_over and richtig != rn:
             print(pos)
             pos = pygame.mouse.get_pos()
             mx, my = pos
-            mx = int((mx-(int(mx/50)*1))/50)
-            my = int((my-(int(my/50)*1))/50)
+            mx = int((mx-(int(mx/gröse)*1))/gröse)
+            my = int((my-(int(my/gröse)*1))/gröse)
             print(mx, my)
 
             try:
-                if field[mx][my] != "+" and pygame.Surface.get_at(screen, pos) != grau:
-                    pygame.draw.rect(screen, grau, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
-                    myfont = pygame.font.SysFont('Comic Sans MS', 20)
+                if field[mx][my] != "+" and pygame.Surface.get_at(screen, pos) != grau and pygame.Surface.get_at(screen, pos) != schwarz:
+                    pygame.draw.rect(screen, grau, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
+                    myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
                     textsurface = myfont.render(field[mx][my], False, (0, 0, 0))
-                    screen.blit(textsurface,(mx*50+(mx*1)+21, my*50+(my*1)+15))
+                    screen.blit(textsurface,(mx*gröse+(mx*1)+gröse/2.3, my*gröse+(my*1)+gröse/3.7))
                     richtig += 1
                     print("Richtig:", richtig)
                 elif field[mx][my] == "+":
-                    pygame.draw.rect(screen, rot, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
+                    pygame.draw.rect(screen, rot, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
                     if leben != 0:
                         leben -= 1
                     elif leben == 0:
@@ -107,33 +109,44 @@ while not game_over and richtig != rn:
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
             pos = pygame.mouse.get_pos()
             mx, my = pos
-            mx = int((mx-(int(mx/50)*1))/50)
-            my = int((my-(int(my/50)*1))/50)
+            mx = int((mx-(int(mx/gröse)*1))/gröse)
+            my = int((my-(int(my/gröse)*1))/gröse)
 
             if pygame.Surface.get_at(screen, pos) == weis:
-                pygame.draw.rect(screen, orange, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
+                pygame.draw.rect(screen, orange, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
             else:
-                pygame.draw.rect(screen, weis, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
+                pygame.draw.rect(screen, weis, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
 
 
 
     while z != fgröse - 1 and s != fgröse - 1:
+        colo = rd.randint(0,1)
         for z in range(len(field)):
             for s in range(len(field[z])):
                 if s == fgröse - 1:
-                    if field[z][s] != "+":
-                        pygame.draw.rect(screen, weis, (x, y, gröse, gröse))
-                    else:
-                        pygame.draw.rect(screen, weis, (x, y, gröse, gröse))
+                    if colors[colo] == (50,205,50):
+                        pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
+                        colo = (colo + 1) % 2
+
+                    elif colors[colo] == (152,251,152):
+                        pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
+                        colo = (colo + 1) % 2
+
+                    colo = (colo + 1) % 2
                     y+= gröse+1
                     x = 1
+
                 else:
-                    if field[z][s] == "+":
-                        pygame.draw.rect(screen, weis, (x, y, gröse, gröse))
+                    if colors[colo] == (50,205,50):
+                        pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
                         x += gröse+1
-                    else:
-                        pygame.draw.rect(screen, weis, (x, y, gröse, gröse))
+                        colo = (colo + 1) % 2
+
+                    elif colors[colo] == (152,251,152):
+                        pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
                         x += gröse+1
+                        colo = (colo + 1) % 2
+
                 #print(z, s)
 
     pygame.display.update()
