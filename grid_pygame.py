@@ -76,10 +76,11 @@ while not game_over:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
             pos = pygame.mouse.get_pos()
             print(pos)
+            pos = pygame.mouse.get_pos()
             mx, my = pos
-            mx = int(mx / gröse)
-            my = int(my / gröse)
-            print(my, mx)
+            mx = int((mx-(int(mx/50)*1))/50)
+            my = int((my-(int(my/50)*1))/50)
+            print(mx, my)
 
             try:
                 if field[mx][my] != "+":
@@ -98,8 +99,9 @@ while not game_over:
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
             pos = pygame.mouse.get_pos()
             mx, my = pos
-            mx = int(mx / gröse)
-            my = int(my / gröse)
+            mx = int((mx-(int(mx/50)*1))/50)
+            my = int((my-(int(my/50)*1))/50)
+
             if pygame.Surface.get_at(screen, pos) == weis:
                 pygame.draw.rect(screen, orange, (mx*50+(mx*1)+1, my*50+(my*1)+1, gröse, gröse))
             else:
