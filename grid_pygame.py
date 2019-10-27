@@ -76,6 +76,7 @@ def c3x3(field, mx, my):
                 if field[i][j] == "0":
                     if [i, j] not in nkl and field[i][j] != "+":
                         nkl.append([i, j])
+                        print("NKL", nkl)
 
 
 #for c in field:
@@ -118,12 +119,10 @@ while not game_over:
                 elif field[mx][my] == "0":
                     nkl = []
                     c3x3(field, mx, my)
-                    for z in range(4):
-                        for ko in nkl:
-                            mx = ko[0]
-                            my = ko[1]
-                            c3x3(field, mx, my)
-                            nkl.pop(0)
+                    for ko in nkl:
+                        mx = ko[0]
+                        my = ko[1]
+                        c3x3(field, mx, my)
 
                 else:
                     pass
