@@ -11,13 +11,13 @@ leben = 1
 # Change size of the field
 fgröse = 18
 
+nkl = []
 cl = []
 
 field = [["O" for i in range(fgröse)] for i in range(fgröse)]
 bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(round((20*(fgröse**2))//100))]
 
 rn = int(fgröse**2-len(bomben))
-richtig = 0
 
 color = 1
 weis = (255, 255, 255)
@@ -63,6 +63,21 @@ for a in range(len(field)):
             else:
                 pass
 
+def c3x3(field, mx, my):
+    zr = range(mx-1, mx+2)
+    sr = range(my-1, my+2)
+    for i in zr:
+        for j in sr:
+            if field[i][j] != "+":
+                pygame.draw.rect(screen, grau, (i*gröse+(i*1)+1, j*gröse+(j*1)+1, gröse, gröse))
+                myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
+                textsurface = myfont.render(field[i][j], False, (0, 0, 0))
+                screen.blit(textsurface,(i*gröse+(i*1)+gröse/2.3, j*gröse+(j*1)+gröse/3.7))
+                if field[i][j] == "0":
+                    if [i, j] not in nkl and field[i][j] != "+":
+                        nkl.append([i, j])
+
+
 #for c in field:
 #   print(c)
 
@@ -74,7 +89,7 @@ game_over = False
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Minesweeper")
 
-while not game_over and richtig != rn:
+while not game_over:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -89,21 +104,29 @@ while not game_over and richtig != rn:
             print(mx, my)
 
             try:
-                if field[mx][my] != "+" and pygame.Surface.get_at(screen, pos) != grau and pygame.Surface.get_at(screen, pos) != schwarz:
+                if field[mx][my] != "+" and pygame.Surface.get_at(screen, pos) != grau and pygame.Surface.get_at(screen, pos) != schwarz and field[mx][my] != "0":
                     pygame.draw.rect(screen, grau, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
                     myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
                     textsurface = myfont.render(field[mx][my], False, (0, 0, 0))
                     screen.blit(textsurface,(mx*gröse+(mx*1)+gröse/2.3, my*gröse+(my*1)+gröse/3.7))
-                    richtig += 1
-                    print("Richtig:", richtig)
                 elif field[mx][my] == "+":
                     pygame.draw.rect(screen, rot, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
                     if leben != 0:
                         leben -= 1
                     elif leben == 0:
                         game_over = True
-                    else:
-                        pass
+                elif field[mx][my] == "0":
+                    nkl = []
+                    c3x3(field, mx, my)
+                    for z in range(4):
+                        for ko in nkl:
+                            mx = ko[0]
+                            my = ko[1]
+                            c3x3(field, mx, my)
+                            nkl.pop(0)
+
+                else:
+                    pass
             except IndexError:
                 pass
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
@@ -112,10 +135,11 @@ while not game_over and richtig != rn:
             mx = int((mx-(int(mx/gröse)*1))/gröse)
             my = int((my-(int(my/gröse)*1))/gröse)
 
-            if pygame.Surface.get_at(screen, pos) == weis:
+            if pygame.Surface.get_at(screen, pos) == colors[0] or pygame.Surface.get_at(screen, pos) == colors[1]:
+                cc = pygame.Surface.get_at(screen, pos)
                 pygame.draw.rect(screen, orange, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
             else:
-                pygame.draw.rect(screen, weis, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
+                pygame.draw.rect(screen, cc, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
 
 
 
