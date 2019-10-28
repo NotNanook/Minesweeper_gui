@@ -15,8 +15,8 @@ nkl = []
 cl = []
 
 field = [["O" for i in range(fgröse)] for i in range(fgröse)]
-bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(round((20*(fgröse**2))//100))]
-
+bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(round((10*(fgröse**2))//100))]
+print("Bomben", bomben)
 rn = int(fgröse**2-len(bomben))
 
 color = 1
@@ -75,8 +75,10 @@ def c3x3(field, mx, my):
                 screen.blit(textsurface,(i*gröse+(i*1)+gröse/2.3, j*gröse+(j*1)+gröse/3.7))
                 if field[i][j] == "0":
                     if [i, j] not in nkl and field[i][j] != "+":
-                        nkl.append([i, j])
-                        print("NKL", nkl)
+                        if i < 0 or j < 0 or i > fgröse or j > fgröse:
+                            pass
+                        else:
+                            nkl.append([i, j])
 
 
 #for c in field:
@@ -119,15 +121,16 @@ while not game_over:
                 elif field[mx][my] == "0":
                     nkl = []
                     c3x3(field, mx, my)
-                    for ko in nkl:
-                        mx = ko[0]
-                        my = ko[1]
+                    while len(nkl) != 1:
+                        mx = nkl[0][0]
+                        my = nkl[0][1]
                         c3x3(field, mx, my)
-
+                        print("NKL", nkl)
+                        nkl.pop(0)
                 else:
                     pass
             except IndexError:
-                pass
+                print("IndexError")
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
             pos = pygame.mouse.get_pos()
             mx, my = pos
