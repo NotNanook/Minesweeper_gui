@@ -16,7 +16,7 @@ cl = []
 
 field = [["O" for i in range(fgröse)] for i in range(fgröse)]
 bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(round((10*(fgröse**2))//100))]
-print("Bomben", bomben)
+
 rn = int(fgröse**2-len(bomben))
 
 color = 1
@@ -68,16 +68,16 @@ def c3x3(field, mx, my):
     sr = range(my-1, my+2)
     for i in zr:
         for j in sr:
-            if field[i][j] != "+":
-                pygame.draw.rect(screen, grau, (i*gröse+(i*1)+1, j*gröse+(j*1)+1, gröse, gröse))
-                myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
-                textsurface = myfont.render(field[i][j], False, (0, 0, 0))
-                screen.blit(textsurface,(i*gröse+(i*1)+gröse/2.3, j*gröse+(j*1)+gröse/3.7))
-                if field[i][j] == "0":
-                    if [i, j] not in nkl and field[i][j] != "+":
-                        if i < 0 or j < 0 or i > fgröse or j > fgröse:
-                            pass
-                        else:
+            if i > fgröse or j > fgröse or i < 0 or j < 0:
+                pass
+            else:
+                if field[i][j] != "+":
+                    pygame.draw.rect(screen, grau, (i*gröse+(i*1)+1, j*gröse+(j*1)+1, gröse, gröse))
+                    myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
+                    textsurface = myfont.render(field[i][j], False, (0, 0, 0))
+                    screen.blit(textsurface,(i*gröse+(i*1)+gröse/2.3, j*gröse+(j*1)+gröse/3.7))
+                    if field[i][j] == "0":
+                        if [i, j] not in nkl and field[i][j] != "+":
                             nkl.append([i, j])
 
 
@@ -119,14 +119,17 @@ while not game_over:
                     elif leben == 0:
                         game_over = True
                 elif field[mx][my] == "0":
-                    nkl = []
-                    c3x3(field, mx, my)
-                    while len(nkl) != 1:
-                        mx = nkl[0][0]
-                        my = nkl[0][1]
+                        nkl = []
                         c3x3(field, mx, my)
-                        print("NKL", nkl)
-                        nkl.pop(0)
+                        for ko in nkl:
+                            try:
+                                mx = ko[0]
+                                my = ko[1]
+                                c3x3(field, mx, my)
+                                #print("Nkl", nkl, "Ko", ko)
+                            except IndexError:
+                                continue
+
                 else:
                     pass
             except IndexError:
