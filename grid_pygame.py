@@ -9,7 +9,7 @@ RIGHT = 3
 leben = 1
 
 # Change size of the field
-fgröse = 18
+fgröse = 19
 
 nkl = []
 cl = []
@@ -40,45 +40,48 @@ for i in bomben:
             field[b_höhe][b_breite] = "+"
 
 for a in range(len(field)):
-        for b in range(len(field[a])):
-            zr = range(a-1, a+2)
-            sr = range(b-1, b+2)
-            if field[a][b] != "+":
+    for b in range(len(field[a])):
+        zr = range(a-1, a+2)
+        sr = range(b-1, b+2)
+        if field[a][b] != "+":
 
-                for i in zr:
-                        for j in sr:
-                            try:
-                                if j >= 0 and i >= 0:
-                                    cl.append(field[i][j])
-                                else:
-                                    pass
-
-                            except IndexError:
+            for i in zr:
+                    for j in sr:
+                        try:
+                            if j >= 0 and i >= 0:
+                                cl.append(field[i][j])
+                            else:
                                 pass
 
-                ndb = cl.count("+")
-                field[a][b] = str(ndb)
-                cl = []
+                        except IndexError:
+                            pass
 
-            else:
-                pass
+            ndb = cl.count("+")
+            field[a][b] = str(ndb)
+            cl = []
+
+        else:
+            pass
 
 def c3x3(field, mx, my):
     zr = range(mx-1, mx+2)
     sr = range(my-1, my+2)
     for i in zr:
         for j in sr:
-            if i > fgröse or j > fgröse or i < 0 or j < 0:
-                pass
-            else:
-                if field[i][j] != "+":
-                    pygame.draw.rect(screen, grau, (i*gröse+(i*1)+1, j*gröse+(j*1)+1, gröse, gröse))
-                    myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
-                    textsurface = myfont.render(field[i][j], False, (0, 0, 0))
-                    screen.blit(textsurface,(i*gröse+(i*1)+gröse/2.3, j*gröse+(j*1)+gröse/3.7))
-                    if field[i][j] == "0":
-                        if [i, j] not in nkl and field[i][j] != "+":
-                            nkl.append([i, j])
+            try:
+                if i > fgröse or j > fgröse or i < 0 or j < 0:
+                    pass
+                else:
+                    if field[i][j] != "+":
+                        pygame.draw.rect(screen, grau, (i*gröse+(i*1)+1, j*gröse+(j*1)+1, gröse, gröse))
+                        myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
+                        textsurface = myfont.render(field[i][j], False, (0, 0, 0))
+                        screen.blit(textsurface,(i*gröse+(i*1)+gröse/2.3, j*gröse+(j*1)+gröse/3.7))
+                        if field[i][j] == "0":
+                            if [i, j] not in nkl and field[i][j] != "+":
+                                nkl.append([i, j])
+            except:
+                continue
 
 
 #for c in field:
@@ -93,14 +96,13 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Minesweeper")
 
 while not game_over:
-
+    pygame.init()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            sys.exit()
+            pygame.quit()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
             pos = pygame.mouse.get_pos()
             print(pos)
-            pos = pygame.mouse.get_pos()
             mx, my = pos
             mx = int((mx-(int(mx/gröse)*1))/gröse)
             my = int((my-(int(my/gröse)*1))/gröse)
@@ -133,7 +135,7 @@ while not game_over:
                 else:
                     pass
             except IndexError:
-                print("IndexError")
+                continue
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
             pos = pygame.mouse.get_pos()
             mx, my = pos
@@ -151,17 +153,17 @@ while not game_over:
     while z != fgröse - 1 and s != fgröse - 1:
         colo = rd.randint(0,1)
         for z in range(len(field)):
+            if fgröse % 2 == 0:
+                colo = (colo + 1) % 2
             for s in range(len(field[z])):
+                colo = (colo + 1) % 2
                 if s == fgröse - 1:
                     if colors[colo] == (50,205,50):
                         pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
-                        colo = (colo + 1) % 2
 
                     elif colors[colo] == (152,251,152):
                         pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
-                        colo = (colo + 1) % 2
 
-                    colo = (colo + 1) % 2
                     y+= gröse+1
                     x = 1
 
@@ -169,14 +171,15 @@ while not game_over:
                     if colors[colo] == (50,205,50):
                         pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
                         x += gröse+1
-                        colo = (colo + 1) % 2
 
                     elif colors[colo] == (152,251,152):
                         pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
                         x += gröse+1
-                        colo = (colo + 1) % 2
 
                 #print(z, s)
-
-    pygame.display.update()
-
+    try:
+        pygame.display.update()
+    except:
+        pass
+    
+pygame.quit()
