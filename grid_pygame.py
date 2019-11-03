@@ -9,7 +9,7 @@ RIGHT = 3
 leben = 1
 
 # Change size of the field
-fgröse = 19
+fgröse = 5
 
 nkl = []
 cl = []
@@ -104,6 +104,7 @@ while not game_over and richtig != rn:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+            sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
             pos = pygame.mouse.get_pos()
             print(pos)
@@ -155,7 +156,7 @@ while not game_over and richtig != rn:
             if pygame.Surface.get_at(screen, pos) == colors[0] or pygame.Surface.get_at(screen, pos) == colors[1]:
                 cc = pygame.Surface.get_at(screen, pos)
                 pygame.draw.rect(screen, orange, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
-            else:
+            elif pygame.Surface.get_at(screen, pos) == orange:
                 pygame.draw.rect(screen, cc, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
 
 
@@ -192,4 +193,6 @@ while not game_over and richtig != rn:
     except:
         pass
 
+
 pygame.quit()
+sys.exit()
