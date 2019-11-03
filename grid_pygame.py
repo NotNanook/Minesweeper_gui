@@ -13,11 +13,13 @@ fgröse = 19
 
 nkl = []
 cl = []
+rfelder = set()
 
 field = [["O" for i in range(fgröse)] for i in range(fgröse)]
 bomben = [[rd.randint(0,fgröse-1), rd.randint(0,fgröse-1)] for x in range(round((10*(fgröse**2))//100))]
 
 rn = int(fgröse**2-len(bomben))
+richtig = 0
 
 color = 1
 weis = (255, 255, 255)
@@ -80,6 +82,8 @@ def c3x3(field, mx, my):
                         if field[i][j] == "0":
                             if [i, j] not in nkl and field[i][j] != "+":
                                 nkl.append([i, j])
+                        else:
+                            rfelder.add((i, j))
             except:
                 continue
 
@@ -95,7 +99,7 @@ game_over = False
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Minesweeper")
 
-while not game_over:
+while not game_over and richtig != rn:
     pygame.init()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -114,13 +118,15 @@ while not game_over:
                     myfont = pygame.font.SysFont('Comic Sans MS', int(gröse/2.5))
                     textsurface = myfont.render(field[mx][my], False, (0, 0, 0))
                     screen.blit(textsurface,(mx*gröse+(mx*1)+gröse/2.3, my*gröse+(my*1)+gröse/3.7))
+                    richtig += 1
+                    #print("richtig",richtig)
                 elif field[mx][my] == "+":
                     pygame.draw.rect(screen, rot, (mx*gröse+(mx*1)+1, my*gröse+(my*1)+1, gröse, gröse))
                     if leben != 0:
                         leben -= 1
                     elif leben == 0:
                         game_over = True
-                elif field[mx][my] == "0":
+                elif field[mx][my] == "0" and pygame.Surface.get_at(screen, pos) != grau and pygame.Surface.get_at(screen, pos) != schwarz:
                         nkl = []
                         c3x3(field, mx, my)
                         for ko in nkl:
@@ -131,6 +137,10 @@ while not game_over:
                                 #print("Nkl", nkl, "Ko", ko)
                             except IndexError:
                                 continue
+                        richtig += len(rfelder) + len(nkl)
+                        #print(rfelder)
+                        rfelder = set()
+                        #print("Richtig", richtig)
 
                 else:
                     pass
@@ -181,5 +191,5 @@ while not game_over:
         pygame.display.update()
     except:
         pass
-    
+
 pygame.quit()
