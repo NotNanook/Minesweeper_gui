@@ -36,7 +36,7 @@ bomb_anz = round((bomb_perc*(fgröse**2))//100)
 Standard = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,0), (0,1), (1,-1), (1,0), (1,1)]
 Kreuz = [(-1,0),(0,-1),(0,0),(0,1),(1,0)]
 
-masklist = {"Standard":Standard, "Kreuz":Kreuz}
+masklist = {"Default":Standard, "Cross":Kreuz}
 
 # window to choose the playstyle
 main = tk.Tk("Minesweeper")
@@ -51,7 +51,7 @@ def quit_loop():
     selection = var.get()
     main.destroy()
 
-tk.Label(main, text="Spielweise aussuchen", font=("Default", 15)).grid(row=0)
+tk.Label(main, text="Choose playstyle", font=("Default", 15)).grid(row=0)
 
 for masksnum in range(len(masklist)):
 
@@ -59,7 +59,7 @@ for masksnum in range(len(masklist)):
     tk.Radiobutton(main, text=list(masklist.keys())[masksnum], variable=var, value=masksnum, font=("Default", 15)).grid(row=masksnum+1)
 
 # start button
-button = tk.Button(main, text="Starten", command=quit_loop, font=("Default", 15)).grid(row=len(masklist)+1)
+button = tk.Button(main, text="Start", command=quit_loop, font=("Default", 15)).grid(row=len(masklist)+1)
 
 main.mainloop()
 
@@ -174,7 +174,7 @@ pygame.display.set_caption("Minesweeper")
 while True:
 
     if len(rfelder) >= rn and temp2:
-        print("Du hast gewonnen!")
+        print("You have won!")
 
         for bombs in bomben:
 
@@ -227,7 +227,7 @@ while True:
 
                 # how much fields to win
                 rn = int(fgröse**2-len(bomben))
-                print("Richtig Nötig:", rn)
+                print("Correct needed:", rn)
                 first_t_start = False
 
             if field[mx][my] != "+" and pygame.Surface.get_at(screen, pos) != grau and pygame.Surface.get_at(screen, pos) != schwarz and field[mx][my] != "0":
@@ -238,7 +238,7 @@ while True:
 
                 # add correct field to rfelder
                 rfelder.add((mx,my))
-                print("Richtig:", len(rfelder))
+                print("Correct:", len(rfelder))
 
             elif field[mx][my] == "+":
 
@@ -298,7 +298,7 @@ while True:
                     # pop first element
                     nkl.pop(0)
 
-                print("Richtig:", len(rfelder))
+                print("Correct:", len(rfelder))
 
         # still bugy
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT and not game_over:
@@ -331,12 +331,12 @@ while True:
 
     # drawing the board
     while z != fgröse - 1 and s != fgröse - 1:
-        
+
         #choose random color
         colo = rd.randint(0,1)
 
         for z in range(len(field)):
-            
+
             # switch color every row if fgröse is even
             colo = (colo + 1) % 2 if fgröse % 2 == 0 else colo
 
@@ -345,7 +345,7 @@ while True:
                 colo = (colo + 1) % 2
 
                 pygame.draw.rect(screen, colors[colo], (x, y, gröse, gröse))
-                
+
                 # assign x, y coords
                 y = y+gröse+1 if s == fgröse-1 else y
                 x = x+gröse+1 if s != fgröse-1 else 1
